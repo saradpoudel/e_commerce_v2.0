@@ -2,6 +2,8 @@
 
 
 ## Technologies used
+* Vite
+* Tailwind
 * React
 * Express
 * PostgresSQL
