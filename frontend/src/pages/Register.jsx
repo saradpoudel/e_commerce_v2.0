@@ -10,7 +10,7 @@ import submitAction from "../actions/submitAction";
 export default function Register() {
     const [backendError, setBackendError] = useState()
     const [passwordType, setPasswordType] = useState("password");
-    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(registerSchema)
     });
 
