@@ -8,13 +8,22 @@ import { useState } from "react";
 import submitAction from "../actions/submitAction";
 
 export default function Register() {
+    const [backendError, setBackendError] = useState()
     const [passwordType, setPasswordType] = useState("password");
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
         resolver: yupResolver(registerSchema)
     });
 
     async function onSubmit(data) {
-        await submitAction(data);
+        setBackendError()
+       const response =  await submitAction(data);
+       const {success, error} =  await response.json()
+       if(error) {
+        setBackendError(error.messages.join(', '))
+       }
+       else if(success) {
+        console.log(success.message)
+       }
     }
 
     function togglePasswordType() {
@@ -44,6 +53,10 @@ export default function Register() {
 
                             </p>
                         </div>
+
+                        {
+                            backendError && <p className="text-red-500 text-sm mt-4">{backendError}</p> 
+                        }
 
                         <div className="mt-10">
                             <div>
