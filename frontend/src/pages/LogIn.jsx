@@ -1,12 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../components/Logo";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import loginSchema from "../validationSchemas/loginSchema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import signInAction from "../actions/signInAction";
+import { useCookies } from "react-cookie";
 
 export default function LogIn() {
+  const navigate = useNavigate();
+  const [cookies, setCookie]= useCookies(['authToken']);
   const [backendError, setBackendError] = useState()
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(loginSchema)
@@ -15,14 +18,22 @@ export default function LogIn() {
   async function onSubmit(data) {
     setBackendError()
     const response =  await signInAction(data);
-    const {success, error} =  await response.json()
-       if(error) {
-        setBackendError(error.messages.join(', '))
-       }
-       else if(success) {
-        console.log(success.message)
-       }
+    const {success, token, error} =  await response.json()
+    if(error) {
+    setBackendError(error.messages.join(', '))
+    }
+    else if(success) {
+      console.log(success.message)
+      setCookie('authToken', token)
+
+    }
   }
+
+  useEffect(() => {
+    if(cookies.authToken) {
+      navigate('/dashboard');
+    }
+  }, [cookies, navigate])
 
   return (
     <>
@@ -43,6 +54,10 @@ export default function LogIn() {
 
               </p>
             </div>
+
+            {
+                backendError && <p className="text-red-500 text-sm mt-4">{backendError}</p> 
+            }
 
             <div className="mt-10">
               <div>

@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import LogIn from "./pages/LogIn";
 import ResetPassword from "./pages/ResetPassword";
 import ChangePassword from "./pages/ChangePassword";
+import Dashboard from "./pages/Dashboard";
 
 
 const router = createBrowserRouter([
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     {
         path: "/change-password", 
         element: <ChangePassword />
+    },
+    {
+        path: "/dashboard", 
+        element: <Dashboard />
     }
 ]);
 

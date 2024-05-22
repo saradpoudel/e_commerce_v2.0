@@ -1,13 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useCookies } from "react-cookie";
 
 import Logo from "../components/Logo";
 import registerSchema from "../validationSchemas/registerSchema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import submitAction from "../actions/submitAction";
 
 export default function Register() {
+    const navigate = useNavigate();
+    const [cookies, setCookie]= useCookies(['authToken']);
     const [backendError, setBackendError] = useState()
     const [passwordType, setPasswordType] = useState("password");
     const { register, handleSubmit, formState: { errors } } = useForm({
@@ -17,12 +20,13 @@ export default function Register() {
     async function onSubmit(data) {
         setBackendError()
        const response =  await submitAction(data);
-       const {success, error} =  await response.json()
+       const {success, token, error} =  await response.json()
        if(error) {
         setBackendError(error.messages.join(', '))
        }
        else if(success) {
         console.log(success.message)
+        setCookie('authToken', token)
        }
     }
 
@@ -33,6 +37,15 @@ export default function Register() {
         }
         setPasswordType(newPasswordType);
     }
+
+
+    useEffect(() => {
+        if(cookies.authToken) {
+          navigate('/dashboard');
+        }
+      }, [cookies, navigate])
+
+      
 
     return (
         <>

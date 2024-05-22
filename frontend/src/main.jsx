@@ -1,4 +1,4 @@
-import React from 'react'
+import { CookiesProvider } from 'react-cookie';
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
@@ -8,7 +8,7 @@ import router from './router';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <CookiesProvider defaultSetOptions={{ path: '/' }}>
      <RouterProvider router={router} />
-  </React.StrictMode>,
+  </CookiesProvider>,
 )
