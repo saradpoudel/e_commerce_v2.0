@@ -17,8 +17,13 @@ import {
   UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
-import {  MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import ProfileDropdown from '../components/ProfileDropDown'
+import { useCookies } from 'react-cookie'
+import { Outlet, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+
+
 
 const navigation = [
   { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
@@ -40,7 +45,15 @@ function classNames(...classes) {
 }
 
 export default function Dashboard() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(['authToken']);
+
+  useEffect(() => {
+    if (!cookies.authToken) {
+      navigate('/login')
+    }
+  }, [cookies, navigate])
 
   return (
     <>
@@ -279,13 +292,13 @@ export default function Dashboard() {
                 {/* Separator */}
                 <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" aria-hidden="true" />
 
-               <ProfileDropdown />
+                <ProfileDropdown />
               </div>
             </div>
           </div>
 
           <main className="py-10">
-            <div className="px-4 sm:px-6 lg:px-8">{/* Your content */}</div>
+            <div className="px-4 sm:px-6 lg:px-8"><Outlet /></div>
           </main>
         </div>
       </div>

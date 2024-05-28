@@ -14,14 +14,14 @@ datasource db {
 }
 
 model Client {
-  id     String      @id @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  firstName     String   @db.VarChar(255)
-  lastName     String   @db.VarChar(255)
-  mobile     String   @db.VarChar(15)
+  firstName String   @db.VarChar(255)
+  lastName  String   @db.VarChar(255)
+  mobile    String   @db.VarChar(15)
   email     String   @db.VarChar(50)
-  password     String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
 
   @@unique([mobile])
   @@unique([email])

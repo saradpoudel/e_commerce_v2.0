@@ -16,16 +16,16 @@ async function sendRegisterEmail(newClient) {
                 }
             }
         ]
-      }
+    }
 
     try {
         await sgMail.send(msg)
     }
-    catch(error) {
+    catch (error) {
         console.log(error.response.body)
-        throw new Error()
+        // throw new Error()
     }
-   
+
 }
 
-module.exports = {sendRegisterEmail}
+module.exports = { sendRegisterEmail }

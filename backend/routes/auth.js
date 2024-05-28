@@ -5,20 +5,20 @@ var emailService = require('../services/emailService');
 var router = express.Router();
 
 
-router.post('/register', async function(req, res, next) {
+router.post('/register', async function (req, res, next) {
   try {
     const userData = req.body;
-    const existingUserWithEmail = await authService.getOne({email: userData.email});
+    const existingUserWithEmail = await authService.getOne({ email: userData.email });
     const messages = []
-    if(existingUserWithEmail) {
+    if (existingUserWithEmail) {
       messages.push(`Email ${userData.email} is already registered!`)
     }
-    const existingUserWithMobile = await authService.getOne({mobile: userData.mobile})
-    if(existingUserWithMobile) {
+    const existingUserWithMobile = await authService.getOne({ mobile: userData.mobile })
+    if (existingUserWithMobile) {
       messages.push(`Mobile ${userData.mobile} is already registered!`)
     }
-    if(messages.length > 0) {
-      return  res.status(400).json({error: {messages: messages }})
+    if (messages.length > 0) {
+      return res.status(400).json({ error: { messages: messages } })
     }
     const newClient = await authService.register(userData);
     await emailService.sendRegisterEmail(newClient);
@@ -26,38 +26,40 @@ router.post('/register', async function(req, res, next) {
 
     res.json({
       token,
-      success: {message: 'Successfully registered!'}});
+      success: { message: 'Successfully registered!' }
+    });
   }
-  catch(error) {
+  catch (error) {
     console.log(error)
-    res.status(500).json({error: {messages: ['Something went wrong. Please try after a while!']}})
+    res.status(500).json({ error: { messages: ['Something went wrong. Please try after a while!'] } })
   }
 });
 
 
-router.post('/signin', async function(req, res, next) {
+router.post('/signin', async function (req, res, next) {
   try {
     const userData = req.body;
-    const existingUserWithEmail = await authService.getOne({email: userData.email});
-    if(!existingUserWithEmail) {
-      return res.status(404).json({error: {messages: [`Email ${userData.email} is not registered!`]}})
+    const existingUserWithEmail = await authService.getOne({ email: userData.email });
+    if (!existingUserWithEmail) {
+      return res.status(404).json({ error: { messages: [`Email ${userData.email} is not registered!`] } })
     }
 
     const passwordMatches = await authService.signIn(userData)
-    if(!passwordMatches) {
-      return res.status(401).json({error: {messages: [`Email and password does not match. Try again!`]}})
+    if (!passwordMatches) {
+      return res.status(401).json({ error: { messages: [`Email and password does not match. Try again!`] } })
     }
 
     const token = await authService.createToken(existingUserWithEmail.id)
 
     res.json({
       token,
-      success: {message: 'Successfully signed in!'}});
+      success: { message: 'Successfully signed in!' }
+    });
 
   }
-  catch(error) {
+  catch (error) {
     console.log(error)
-    res.status(500).json({error: {messages: ['Something went wrong. Please try after a while!']}})
+    res.status(500).json({ error: { messages: ['Something went wrong. Please try after a while!'] } })
   }
 })
 
